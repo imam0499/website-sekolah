@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Guru - Data Siswa</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+    <div class="header-container"></div>
+      <img src="lkmd.png" alt="Logo Sekolah" class="logo" />
+      <div class="judul-sekolah"></div>
+        <h1>SMA SWASTA LKMD KANDIS</h1>
+        <p>Sekolah Berbasis Karakter, Prestasi, dan Teknologi</p>
+        </div>
+    </div>
+    <nav>
+      <a href="index.html">Beranda</a>
+      <a href="profil.html">Profil</a>
+      <a href="berita.html">Berita</a>
+      <a href="kontak.html">Kontak</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </header>
+  
+  <main>
+    <h2>Halo Guru: <span id="guruNama"></span></h2>
+    <h3>Input Data Siswa</h3>
+    <input type="text" id="namaSiswa" placeholder="Nama Siswa"><br>
+    <input type="text" id="kelasSiswa" placeholder="Kelas"><br>
+    <button onclick="simpanSiswa()">Simpan</button>
+
+    <h3>Daftar Siswa</h3>
+    <ul id="daftarSiswa"></ul>
+  </main>
+
+  <script>
+    document.getElementById("guruNama").innerText = localStorage.getItem("userName") || "";
+
+    function simpanSiswa() {
+      const nama = document.getElementById("namaSiswa").value;
+      const kelas = document.getElementById("kelasSiswa").value;
+
+      if (!nama || !kelas) return alert("Lengkapi data siswa!");
+
+      let siswaList = JSON.parse(localStorage.getItem("siswaList")) || [];
+      siswaList.push({ nama, kelas });
+      localStorage.setItem("siswaList", JSON.stringify(siswaList));
+
+      tampilkanSiswa();
+      document.getElementById("namaSiswa").value = "";
+      document.getElementById("kelasSiswa").value = "";
+    }
+
+    function tampilkanSiswa() {
+      const list = JSON.parse(localStorage.getItem("siswaList")) || [];
+      const ul = document.getElementById("daftarSiswa");
+      ul.innerHTML = "";
+      list.forEach(s => {
+        ul.innerHTML += `<li>${s.nama} - ${s.kelas}</li>`;
+      });
+    }
+
+    tampilkanSiswa();
+  </script>
+</body>
+</html>

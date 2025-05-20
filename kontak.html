@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kontak | SMA SWASTA LKMD KANDIS</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <div class="header-container"></div>
+      <img src="lkmd.png" alt="Logo Sekolah" class="logo" />
+      <div class="judul-sekolah"></div>
+        <h1>SMA SWASTA LKMD KANDIS</h1>
+        <p>Sekolah Berbasis Karakter, Prestasi, dan Teknologi</p>
+        </div>
+    </div>
+    <nav>
+      <a href="index.html">Beranda</a>
+      <a href="profil.html">Profil</a>
+      <a href="berita.html">Berita</a>
+      <a href="kontak.html">Kontak</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Kontak Kami</h2>
+    <p>Email: smaswastalkmdkandis@gmail.com</p>
+    <p>Telepon: (021) 123-4567</p>
+    <p>Alamat: jl. hangtuah no.15 simpang libo lama, kel. telaga sam-sam, kec. kandis</p>
+
+    <form onsubmit="kirimPesan(event)">
+      <input type="text" id="nama" placeholder="Nama Anda" required /><br>
+      <input type="email" id="email" placeholder="Email" required /><br>
+      <textarea id="pesan" placeholder="Pesan Anda" required></textarea><br>
+      <button type="submit">Kirim</button>
+    </form>
+    <p id="statusPesan"></p>
+  </main>
+  <script src="script.js"></script>
+  <footer>
+    <p>&copy; 2025 SMA SWASTA LKMD KANDIS</p>
+  </footer>
+</body>
+</html>

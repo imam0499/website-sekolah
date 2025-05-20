@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Murid - Kumpulkan Tugas</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+    <div class="header-container"></div>
+      <img src="lkmd.png" alt="Logo Sekolah" class="logo" />
+      <div class="judul-sekolah"></div>
+        <h1>SMA SWASTA LKMD KANDIS</h1>
+        <p>Sekolah Berbasis Karakter, Prestasi, dan Teknologi</p>
+        </div>
+    </div>
+    <nav>
+      <a href="index.html">Beranda</a>
+      <a href="profil.html">Profil</a>
+      <a href="berita.html">Berita</a>
+      <a href="kontak.html">Kontak</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </header>
+  <main>
+    <h2>Selamat datang, <span id="muridNama"></span></h2>
+    <h3>Kumpulkan Tugas</h3>
+    <textarea id="isiTugas" rows="6" placeholder="Tulis jawaban tugas..."></textarea><br>
+    <button onclick="kumpulkanTugas()">Kirim</button>
+
+    <h3>Tugas yang Sudah Dikirim</h3>
+    <div id="tugasTerkirim"></div>
+  </main>
+
+  <script>
+    const nama = localStorage.getItem("userName");
+    document.getElementById("muridNama").innerText = nama || "";
+
+    function kumpulkanTugas() {
+      const isi = document.getElementById("isiTugas").value;
+      if (!isi) return alert("Tulis tugas terlebih dahulu!");
+
+      let tugas = JSON.parse(localStorage.getItem("tugasList")) || [];
+      tugas.push({ nama, isi });
+      localStorage.setItem("tugasList", JSON.stringify(tugas));
+
+      tampilkanTugas();
+      document.getElementById("isiTugas").value = "";
+    }
+
+    function tampilkanTugas() {
+      const tugas = JSON.parse(localStorage.getItem("tugasList")) || [];
+      const hasil = tugas.filter(t => t.nama === nama);
+      const div = document.getElementById("tugasTerkirim");
+      div.innerHTML = hasil.map(t => `<p>${t.isi}</p><hr>`).join("");
+    }
+
+    tampilkanTugas();
+  </script>
+</body>
+</html>

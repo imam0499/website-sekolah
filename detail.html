@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Detail Berita</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <img src="lkmd.png" alt="Logo Sekolah" class="logo" />
+      <div class="judul-sekolah">
+        <h1>SMA SWASTA LKMD KANDIS</h1>
+        <p>Sekolah Berbasis Karakter, Prestasi, dan Teknologi</p>
+      </div>
+    </div>
+  </header>
+  <main>
+    <h2 id="judulDetail"></h2>
+    <img id="gambarDetail" style="max-width:100%; border-radius:8px; margin-bottom:20px;">
+    <p id="kontenDetail"></p>
+    <a href="berita.html">← Kembali ke Berita</a>
+  </main>
+  <script>
+const index = localStorage.getItem("beritaTerpilih");
+const list = JSON.parse(localStorage.getItem("beritaList")) || [];
+
+if (index !== null && list[index]) {
+  const berita = list[index];
+  document.getElementById("judulDetail").innerText = berita.judul;
+  document.getElementById("kontenDetail").innerText = berita.konten;
+  if (berita.gambar) {
+    document.getElementById("gambarDetail").src = berita.gambar;
+  } else {
+    document.getElementById("gambarDetail").style.display = "none";
+  }
+} else {
+  document.getElementById("judulDetail").innerText = "Berita tidak ditemukan";
+}
+  </script>
+</body>
+</html>

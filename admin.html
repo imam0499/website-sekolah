@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <div class="header-container"></div>
+      <img src="lkmd.png" alt="Logo Sekolah" class="logo" />
+      <div class="judul-sekolah"></div>
+        <h1>SMA SWASTA LKMD KANDIS</h1>
+        <p>Sekolah Berbasis Karakter, Prestasi, dan Teknologi</p>
+        </div>
+    </div>
+    <nav>
+      <a href="index.html">Beranda</a>
+      <a href="profil.html">Profil</a>
+      <a href="berita.html">Berita</a>
+      <a href="kontak.html">Kontak</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </header>
+  <main>
+    <h2>Dashboard Admin</h2>
+    <!-- Form Buat Akun -->
+    <section style="background:#004d99; padding: 15px; border-radius: 8px;">
+      <h3>Buat Akun Guru / Murid</h3>
+      <input type="text" id="newUsername" placeholder="Username Baru"><br>
+      <input type="password" id="newPassword" placeholder="Password"><br>
+      <select id="newRole">
+        <option value="guru">Guru</option>
+        <option value="murid">Murid</option>
+      </select><br><br>
+      <button onclick="buatAkun()">Simpan Akun</button>
+
+    <!-- Tombol-tombol admin -->
+    <button onclick="tampilkanArtikel()">Kelola Artikel</button>
+    <button onclick="tampilkanAkun()">Kelola Akun</button>
+    <button onclick="tampilkanSettings()">⚙️ Pengaturan</button>
+
+    <!-- Ini tempat konten akan ditampilkan -->
+    <div id="pengaturanAdmin" style="display:none; margin-top:20px;"></div>
+    </section>
+
+    <section style="margin-top: 20px;">
+      <h3>Daftar Akun Tersimpan</h3>
+      <ul id="akunList"></ul>
+    </section>
+
+    <hr style="margin: 30px 0;">
+
+    <form onsubmit="uploadBerita(event)">
+      <input type="text" id="judul" placeholder="Judul Berita" required><br>
+      <textarea id="konten" placeholder="Isi berita..." rows="6" required></textarea><br>
+      <input type="file" id="gambar" accept="image/*"><br>
+      <button type="submit">Posting</button>
+  </form>
+
+    <p><a href="berita.html">Lihat Berita</a></p>
+  </main>
+  <script>
+
+function tampilkanArtikel() {
+  const artikelList = JSON.parse(localStorage.getItem("artikelList")) || [];
+  const role = localStorage.getItem("loginRole"); // Ambil role pengguna yang login
+
+  const list = artikelList.map((a, i) => `
+    <li>
+      <strong>${a.judul}</strong><br>
+      ${a.gambar ? `<img src="${a.gambar}" alt="gambar" width="100"><br>` : ""}
+      ${a.isi.substring(0, 100)}...<br>
+      ${role === "admin" ? `<button onclick="editArtikel(${i})">Edit</button>` : ""}
+    </li>
+  `).join("");
+  document.getElementById("daftarArtikel").innerHTML = list;
+}
+
+function editArtikel(index) {
+  const artikelList = JSON.parse(localStorage.getItem("artikelList")) || [];
+  const a = artikelList[index];
+
+  const form = `
+    <h3>Edit Artikel</h3>
+    <input type="text" id="editJudul" value="${a.judul}"><br>
+    <textarea id="editIsi">${a.isi}</textarea><br>
+    <input type="text" id="editGambar" value="${a.gambar || ''}"><br>
+    <button onclick="simpanEditArtikel(${index})">Simpan Perubahan</button>
+    <button onclick="tampilkanArtikel()">Batal</button>
+  `;
+
+  document.getElementById("daftarArtikel").innerHTML = form;
+}
+
+function simpanEditArtikel(index) {
+  const artikelList = JSON.parse(localStorage.getItem("artikelList")) || [];
+
+  artikelList[index].judul = document.getElementById("editJudul").value;
+  artikelList[index].isi = document.getElementById("editIsi").value;
+  artikelList[index].gambar = document.getElementById("editGambar").value;
+
+  localStorage.setItem("artikelList", JSON.stringify(artikelList));
+  alert("Artikel berhasil diperbarui!");
+  tampilkanArtikel();
+}
+
+function tampilkanSettings() {
+  const listArtikel = JSON.parse(localStorage.getItem("artikelList")) || [];
+  const list = listArtikel.map((a, i) => `
+    <li>
+      <strong>${a.judul}</strong><br>
+      <button onclick="hapusArtikel(${i})" style="color:red">Hapus</button>
+    </li>
+  `).join("");
+
+  const uploadForm = `
+    <h3>Upload Pengumuman</h3>
+    <input type="file" id="filePengumuman" accept=".pdf,.doc,.docx"><br>
+    <button onclick="uploadPengumuman()">Upload</button>
+  `;
+
+  const daftarPengumuman = tampilkanDaftarPengumuman();
+
+  document.getElementById("pengaturanAdmin").innerHTML = `
+    <h2>Pengaturan Admin</h2>
+    <h3>Daftar Berita</h3>
+    <ul>${list}</ul>
+    ${uploadForm}
+    ${daftarPengumuman}
+  `;
+  document.getElementById("pengaturanAdmin").style.display = "block";
+}
+
+function hapusArtikel(index) {
+  if (confirm("Yakin ingin menghapus artikel ini?")) {
+    const list = JSON.parse(localStorage.getItem("artikelList")) || [];
+    list.splice(index, 1);
+    localStorage.setItem("artikelList", JSON.stringify(list));
+    alert("Artikel berhasil dihapus.");
+    tampilkanSettings(); // refresh daftar
+    tampilkanArtikel();  // refresh tampilan utama
+  }
+}
+
+function uploadPengumuman() {
+  const fileInput = document.getElementById("filePengumuman");
+  const file = fileInput.files[0];
+
+  if (!file) {
+    alert("Pilih file terlebih dahulu.");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const pengumuman = JSON.parse(localStorage.getItem("pengumumanList")) || [];
+    pengumuman.push({
+      nama: file.name,
+      data: e.target.result,
+      type: file.type,
+      waktu: new Date().toLocaleString()
+    });
+    localStorage.setItem("pengumumanList", JSON.stringify(pengumuman));
+    alert("Pengumuman berhasil diupload!");
+    tampilkanSettings();
+  };
+  reader.readAsDataURL(file); // base64
+}
+
+function tampilkanDaftarPengumuman() {
+  const data = JSON.parse(localStorage.getItem("pengumumanList")) || [];
+  if (data.length === 0) return "<p><i>Belum ada pengumuman diupload.</i></p>";
+
+  const list = data.map((p, i) => `
+    <li>
+      <a href="${p.data}" download="${p.nama}">${p.nama}</a> (${p.waktu})
+    </li>
+  `).join("");
+
+  return `<h3>Daftar Pengumuman</h3><ul>${list}</ul>`;
+}
+
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login Admin</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main>
+   <h2>Login</h2>
+    <input type="text" id="username" placeholder="Nama Pengguna" required><br>
+    <input type="password" id="password" placeholder="Kata Sandi" required><br>
+
+    <select id="role">
+      <option value="admin">Login sebagai Admin</option>
+      <option value="guru">Login sebagai Guru</option>
+      <option value="murid">Login sebagai Murid</option>
+    </select><br><br>
+
+    <button onclick="login()">Masuk</button>
+  </main>
+
+  <script>
+    function login() {
+     const user = document.getElementById("username").value;
+     const pass = document.getElementById("password").value;
+     const role = document.getElementById("role").value;
+
+  if (!user || !pass) {
+    alert("Isi semua kolom!");
+    return;
+  }
+
+  // Admin login manual
+  if (user === "admin" && pass === "admin123" && role === "admin") {
+    localStorage.setItem("loginRole", "admin");
+    localStorage.setItem("userName", "admin");
+    window.location.href = "admin.html";
+    return;
+  }
+
+  // Ambil akun dari localStorage
+  const akunList = JSON.parse(localStorage.getItem("akunList")) || [];
+  const cocok = akunList.find(a => a.username === user && a.password === pass && a.role === role);
+
+  if (cocok) {
+    localStorage.setItem("loginRole", role);
+    localStorage.setItem("userName", user);
+    window.location.href = role + ".html"; // ke guru.html atau murid.html
+  } else {
+    alert("Username / Password salah atau role tidak cocok!");
+  }
+}
+  </script>
+</body>
+</html>
+
